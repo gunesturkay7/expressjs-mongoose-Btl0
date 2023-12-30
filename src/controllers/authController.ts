@@ -3,14 +3,22 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 
+const generateToken = (user: IUser) => {
+  // Destructure the password and rest of the user properties
+  const { password, ...userInfoWithoutPassword } = user.toObject();
+
+  // Sign the token with user information except password
+  return jwt.sign(userInfoWithoutPassword, "asdasdsadasd", {
+    expiresIn: "1h",
+  });
+};
+
 const signUp = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
     const user: IUser = await UserModel.create({ username, email, password });
 
-    const token = jwt.sign({ id: user._id, username: user.username }, "asdasdsadasd", {
-      expiresIn: "1h",
-    });
+    const token = generateToken(user);
 
     res.status(201).json({ message: "User created successfully", token });
   } catch (error: any) {
@@ -34,9 +42,7 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user._id, username: user.username }, "asdasdsadasd", {
-      expiresIn: "1h",
-    });
+    const token = generateToken(user);
 
     res.status(200).json({ message: "Authentication successful", token, user });
   } catch (error: any) {
