@@ -18,7 +18,9 @@ const signUp = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
     const user: IUser = await UserModel.create({ username, email, password });
 
-    const token = generateToken(user);
+    const token = jwt.sign({ id: user._id, username: user.username }, "asdasdsadasd", {
+      expiresIn: "1h",
+    });
 
     res.status(201).json({ message: "User created successfully", token });
   } catch (error: any) {
@@ -42,7 +44,9 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = generateToken(user);
+    const token = jwt.sign({ id: user._id, username: user.username }, "asdasdsadasd", {
+      expiresIn: "1h",
+    });
 
     res.status(200).json({ message: "Authentication successful", token, user });
   } catch (error: any) {
