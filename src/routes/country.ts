@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { CountryModel, ICountry } from "../models/country";
+import authenticate from "../middlewares/authenticate";
 
 const routes = Router();
 
-routes.get("/", async (req, res) => {
+routes.get("/", authenticate, async (req, res) => {
+  console.log(req.user, "user");
   try {
     const countries: ICountry[] = await CountryModel.find().exec();
     return res.json(countries);
@@ -13,7 +15,7 @@ routes.get("/", async (req, res) => {
   }
 });
 
-routes.post("/", async (req, res) => {
+routes.post("/", authenticate, async (req, res) => {
   try {
     const country: ICountry = req.body;
 
@@ -22,9 +24,7 @@ routes.post("/", async (req, res) => {
     }).exec();
 
     if (countryExists) {
-      return res
-        .status(409)
-        .json({ error: "There is already another country with this name" });
+      return res.status(409).json({ error: "There is already another country with this name" });
     }
 
     const newCountry = await CountryModel.create(country);

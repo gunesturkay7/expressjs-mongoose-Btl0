@@ -20,6 +20,7 @@ const signUp = async (req: Request, res: Response) => {
 
 const signIn = async (req: Request, res: Response) => {
   try {
+    console.log(req);
     const { username, password } = req.body;
     const user: IUser | null = await UserModel.findOne({ username });
 
