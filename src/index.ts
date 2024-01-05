@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import cors from "cors";
 import tenantRoutes from "./routes/tenant";
+import otpRouter from "./routes/otpRouter";
 
 const app = express();
 const port = process.env.PORT || 3333;
@@ -22,6 +23,7 @@ app.get("/", async (req, res) => {
 app.use("/countries", countryRoutes);
 app.use("/tenants", tenantRoutes);
 app.use("/auth", authRoutes);
+app.use("/", otpRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

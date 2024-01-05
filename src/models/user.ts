@@ -7,6 +7,7 @@ interface IUser extends Document {
   email: string;
   password: string;
   userAvatar: string;
+  phoneNumber: string; // phoneNumber alanını ekleyin
 }
 
 // Define the User schema
@@ -24,6 +25,11 @@ const userSchema = new Schema<IUser>({
   password: {
     type: String,
     required: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true, // phoneNumber alanını zorunlu yapın
+    unique: true, // phoneNumber alanını benzersiz yapın, eğer istenirse
   },
   userAvatar: {
     type: String,

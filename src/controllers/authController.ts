@@ -5,8 +5,8 @@ import { Request, Response } from "express";
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
-    const user: IUser = await UserModel.create({ username, email, password });
+    const { username, email, password, phoneNumber } = req.body;
+    const user: IUser = await UserModel.create({ username, email, password, phoneNumber });
 
     // Include additional user details in the token
     const token = jwt.sign(
@@ -14,6 +14,7 @@ const signUp = async (req: Request, res: Response) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        phoneNumber: user.phoneNumber, // phoneNumber alanını token'a ekle
         userAvatar: user.userAvatar,
       },
       "asdasdsadasd",
@@ -30,7 +31,7 @@ const signUp = async (req: Request, res: Response) => {
 
 const signIn = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, phoneNumber } = req.body;
     const user: IUser | null = await UserModel.findOne({ username });
 
     if (!user) {
@@ -49,6 +50,7 @@ const signIn = async (req: Request, res: Response) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        phoneNumber: user.phoneNumber, // phoneNumber alanını token'a ekle
         userAvatar: user.userAvatar,
       },
       "asdasdsadasd",
