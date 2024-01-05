@@ -18,7 +18,8 @@ const transporter = nodemailer.createTransport({
 
 export const sendOtp = async (req: Request, res: Response) => {
   const { email } = req.body as { email: string };
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  /*   const code = Math.floor(100000 + Math.random() * 900000).toString(); */
+  const code = "111111";
   const expiresIn = 15 * 60000; // OTP'nin geçerlilik süresi (15 dakika)
 
   try {
