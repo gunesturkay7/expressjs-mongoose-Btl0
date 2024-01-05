@@ -51,10 +51,19 @@ export const sendOtp = async (req: Request, res: Response) => {
 export const verifyOtp = async (req: Request, res: Response) => {
   const { email, code } = req.body as { email: string; code: string };
 
-  console.log(email, code);
+  if (!email || !code) {
+    return res.status(400).send("Missing email or code in request body");
+  }
+
+  console.log("Verifying OTP for email:", email);
 
   try {
-    const otp = await OTP.findOne({ email, code, expiresAt: { $gt: new Date() } });
+    const otp = await OTP.findOne({
+      email,
+      code,
+      expiresAt: { $gt: new Date() }, // Consider specifying timezone if necessary
+    });
+
     if (otp) {
       res.status(200).send("OTP verified successfully");
       await OTP.deleteOne({ _id: otp._id });
@@ -63,6 +72,6 @@ export const verifyOtp = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error("Error verifying OTP:", error);
-    res.status(500).send("Error verifying OTP");
+    res.status(500).send("Internal server error during OTP verification");
   }
 };
