@@ -33,3 +33,32 @@ export const getTenants = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ error: error.message });
   }
 };
+const calculateResultText = (resultNumber: number): string => {
+  if (resultNumber < 50) {
+    return "Kötü";
+  } else if (resultNumber < 70) {
+    return "Orta";
+  } else if (resultNumber < 85) {
+    return "İyi";
+  } else {
+    return "Çok iyi";
+  }
+};
+
+export const getResult = async (req: Request, res: Response) => {
+  const { phoneNumber } = req.body;
+
+  // Telefon numarasına göre tenant'ı bul
+  const tenant = await Tenant.findOne({ contactNumber: phoneNumber });
+
+  if (!tenant) {
+    return res.status(404).send("Tenant not found.");
+  }
+
+  // 0 ile 100 arasında rastgele bir sayı oluştur
+  const resultNumber = Math.floor(Math.random() * 101);
+  const resultText = calculateResultText(resultNumber);
+
+  // tenant, resultNumber ve resultText değerlerini JSON olarak dön
+  res.json({ tenant, resultNumber, resultText });
+};

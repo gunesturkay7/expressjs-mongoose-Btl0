@@ -16,8 +16,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
-
 export const sendOtp = async (req: Request, res: Response) => {
   const { email } = req.body as { email: string };
   const code = Math.floor(100000 + Math.random() * 900000).toString();
